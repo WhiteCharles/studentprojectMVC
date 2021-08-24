@@ -1,0 +1,25 @@
+﻿@model Record
+
+<div class="col-sm-4 col-lg-3 col-md-4">
+    <div class="thumbnail">
+        <img src="@Model.ImageThumbnailUrl" alt="" />
+        <div class="caption">
+            <p class="pull-right">@Model.Artist</p>
+            <p> <a asp-controller="Record" asp-action="Details" asp-route-id="@Model.RecordId">@Model.Title</a> </p>
+
+            <div>
+                <p>@Model.Price.ToString("c")</p>
+                <p>@Model.Genre.GenreName</p>
+            </div>
+            
+        </div>
+        <div class="addToCart">
+            <p class="button">
+                <a class="btn btn-primary"
+                   asp-controller="ShoppingCart"
+                   asp-action="AddToShoppingCart"
+                   asp-route-recordId="@Model.RecordId">Add to my sounds</a>
+            </p>
+        </div>
+    </div>
+</div>

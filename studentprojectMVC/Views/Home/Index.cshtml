@@ -1,0 +1,13 @@
+﻿@model HomeViewModel
+
+<partial name="_Carousel" />
+
+<h2>Music of the Month!</h2>
+<h4>Our selection of Breathtaking Sounds!</h4>
+
+<div class="row">
+    @foreach (var record in Model.RecordsOfTheWeek)
+    {
+        <partial name="_RecordCard" model="record" />
+    }
+</div>

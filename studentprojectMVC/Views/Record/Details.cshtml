@@ -1,0 +1,27 @@
+﻿@model Record
+
+<h2>@Model.Title</h2>
+
+<div class="thumbnail">
+    <img alt="@Model.Title" src="@Model.ImageUrl" />
+    <div class="caption-full">
+        <h3 class="pull-right">@Model.Artist</h3>
+        <h3>
+            <a href="#">@Model.Title</a>
+        </h3>
+        <div>
+            <h3>@Model.Price.ToString("c")</h3>
+            <h4>@Model.Details</h4>
+            <h4>@Model.History</h4>
+        </div>
+
+
+        <div class="addToCart">
+            <p class="button">
+                <a class="btn btn-primary" asp-controller="ShoppingCart" asp-action="AddToShoppingCart"
+                   asp-route-recordId="@Model.RecordId">Add to Cart</a>
+            </p>
+        </div>
+    </div>
+    
+</div>

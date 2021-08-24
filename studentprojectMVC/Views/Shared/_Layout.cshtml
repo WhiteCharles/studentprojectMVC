@@ -1,0 +1,113 @@
+﻿@*inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet*@
+
+@using System.Security.Claims
+@using System.Threading.Tasks
+@using studentprojectMVC.Auth
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Identity.EntityFrameworkCore
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject IAuthorizationService AuthorizationService
+@inject UserManager<ApplicationUser> UserManager
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" />
+    <link href="~/lib/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <script src="~/lib/jquery/jquery.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.js"></script>
+    <link href="~/content/site.css" rel="stylesheet" />
+</head>
+<body>
+    <header>
+        <partial name="_CookieConsentPartial" />
+        @*<main role="main" class="pb-3">
+
+            </main>*@
+    </header>
+    <div>
+        <h3>ATTENTION!!!      This is NOT an actual webshop!!!</h3>
+        <h3>This is a student project!!! YOU CANNOT BUY HERE!!!</h3>
+
+    </div>
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+                <ul class="nav navbar-nav">
+                    <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+                    <!--li><a asp-controller="Record" asp-action="List">Records</a></!--li-->
+                    @await Component.InvokeAsync("GenreMenu")
+                    <li><a asp-controller="Contact" asp-action="Index">Contact</a></li>
+                    @await Component.InvokeAsync("ShoppingCartSummary")
+                    @if (SignInManager.IsSignedIn(User) && User.IsInRole("Administrators"))
+                    {
+                        @await Component.InvokeAsync("AdminMenu")
+
+                        <li class="dropdown">
+                            <a asp-controller="RecordManagement"
+                               asp-action="Index">Record Management</a>
+                        </li>
+                    }
+                    @if (SignInManager.IsSignedIn(User) && User.IsInRole("Office Support"))
+                    {
+                        @await Component.InvokeAsync("RecordManagementMenu")
+
+                        <li class="dropdown">
+                            <a asp-controller="RecordManagement"
+                               asp-action="Index">Record Management</a>
+                        </li>
+                    }
+                    @await Html.PartialAsync("_LoginPartial")
+                    <!--partial name="_LoginPartial" /-->
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!--div class="container"-->
+    <div class="row">
+        <div class="col-md-3">
+            <p class="lead">
+                <img class="img-responsive" alt="Music Records Repository" src="~/images/musiclogo.jpeg" />
+            </p>
+        </div>
+        <div class="col-md-9">
+            @RenderBody()
+        </div>
+    </div>
+    <!--div-->
+    @RenderSection("Scripts", required: false)
+
+    <footer class="border-top footer text-muted">
+        <div class="container consentclass">
+            <partial name="_CookieConsentPartial" />
+            &copy; 2021 - Charles D. White - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <partial name="_CookieConsentRevokePartial" />
+            @*asp-page="/Home/Privacy"*@
+        </div>
+    </footer>
+
+    @*<script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>*@
+
+
+</body>
+</html>

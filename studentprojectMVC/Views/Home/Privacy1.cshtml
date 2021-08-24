@@ -1,0 +1,24 @@
+﻿@*using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace studentprojectMVC.Pages
+{
+    public class PrivacyModel : PageModel
+    {
+        public void OnGet()
+        {
+        }
+
+        public IActionResult OnPostWithdraw()
+        {
+            HttpContext.Features.Get<ITrackingConsentFeature>().WithdrawConsent();
+    return RedirectToPage("./Index");
+    }
+
+    }
+    }*@
+
+    @*<h2>Privacy Policy</h2>
+
+        <p>This is a student project, not an actual webshop.</p>*@
