@@ -33,6 +33,11 @@ namespace studentprojectAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<AppDbContext>(options =>
+                            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddScoped<IRecordRepository, RecordRepository>();
+            services.AddScoped<IGenreRepository, GenreRepository>();
             //services.AddControllers();
             services.AddControllers(setupAction =>
             {
@@ -40,20 +45,15 @@ namespace studentprojectAPI
             }).AddXmlDataContractSerializerFormatters();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            //  services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
-            services.AddScoped<IRecordRepository, RecordRepository>();
-            services.AddScoped<IGenreRepository, GenreRepository>();
-
-            services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
-            services.AddSwaggerGen(c => 
+            services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
                     Title = "Student Project API",
-                    
+
                     Description = "Software Security Assignment",
                     TermsOfService = new Uri("https://example.com/terms"),
                     Contact = new OpenApiContact
@@ -93,11 +93,11 @@ namespace studentprojectAPI
                     });
                 });
             }
-            
+
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();
-                        
+
             app.UseSwagger(c =>
             {
                 c.SerializeAsV2 = true;
@@ -113,8 +113,10 @@ namespace studentprojectAPI
 
             app.UseAuthorization();
 
+            app.UseAuthentication(); //  added to check
+
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-           
+
         }
     }
 }

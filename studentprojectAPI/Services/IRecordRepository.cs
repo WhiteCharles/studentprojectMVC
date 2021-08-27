@@ -10,19 +10,24 @@ namespace studentprojectAPI.Services
     public interface IRecordRepository
     {
         // RECORDS
-        IEnumerable<Record> GetRecords();
-        IEnumerable<Record> GetRecord(Guid recordId);
-        Record GetRecord(Guid genreId, Guid recordId);
-        Record GetRecordById(Guid recordId);
+        Task<IEnumerable<Record>> GetAllRecordsAsync();  // IEnumerable<Record> GetRecords();
 
-        void AddRecord(Guid genreId, Record record);
-        void UpdateRecord(Record record);
-        void DeleteRecord(Record record);
+        Task<Record> GetRecordAsync(string title);
+        Task<IEnumerable<Record>> GetAllRecordsByTitle(string searchTerm);
+        Task<IEnumerable<Record>> GetAllRecordsByArtist(string nameSearch);
 
-        IEnumerable<Record> AllRecords { get; }
-        IEnumerable<Record> RecordsOfTheWeek { get; }
+        //IEnumerable<Record> GetRecord(Guid recordId);
+        //Record GetRecord(Guid genreId, Guid recordId);
+        //Record GetRecordById(Guid recordId);
 
-        bool Save();
+        //void AddRecord(Guid genreId, Record record);
+        //void UpdateRecord(Record record);
+        //void DeleteRecord(Record record);
+
+        //IEnumerable<Record> AllRecords { get; }
+        //IEnumerable<Record> RecordsOfTheWeek { get; }
+
+        //bool Save();
 
     }
 }
