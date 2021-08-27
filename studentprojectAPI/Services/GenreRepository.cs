@@ -27,15 +27,15 @@ namespace studentprojectAPI.Services
         // Get specific Genre
         public async Task<Genre> GetGenreAsync(string genreName)
         {
-            IQueryable<Genre> result = _appDbContext.Genres.Include(c => c.)
-            var result = _appDbContext.Genres.Where(g => g.GenreName.ToLowerInvariant() == genreName.ToLowerInvariant());
-            //return await result.FirstOrDefault.FirstOrDefult(); _appDbContext.Genres.Where(g => g.GenreName == genreName);
-            return await result.FirstOrDefaultAsync();
-
+            ////IQueryable<Genre> result = _appDbContext.Genres.Include(c => c.)
             //var result = _appDbContext.Genres.Where(g => g.GenreName.ToLowerInvariant() == genreName.ToLowerInvariant());
             ////return await result.FirstOrDefault.FirstOrDefult(); _appDbContext.Genres.Where(g => g.GenreName == genreName);
             //return await result.FirstOrDefaultAsync();
-            // return result.FirstOrDefault();
+
+            var result = _appDbContext.Genres.Where(g => g.GenreName.ToLowerInvariant() == genreName.ToLowerInvariant());
+            //return await result.FirstOrDefault.FirstOrDefult(); _appDbContext.Genres.Where(g => g.GenreName == genreName);
+            //return await result.FirstOrDefaultAsync();
+            return result.FirstOrDefault();
         }
 
 
