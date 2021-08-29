@@ -62,16 +62,19 @@ namespace studentprojectMVC.Services
         //{
         //    throw new NotImplementedException();
         //}
+
         public Record GetRecordById(Guid recordId)   //
         {
             //return _appDbContext.Records.Include(r => r.RecordReviews).FirstOrDefault(r => r.RecordId == recordId);
             return _appDbContext.Records.FirstOrDefault(r => r.RecordId == recordId);
         }
+
         public void UpdateRecord(Record record)
         {
             _appDbContext.Records.Update(record);
             _appDbContext.SaveChanges();
         }
+
         public void AddRecord(Record record)
         {
             _appDbContext.Records.Add(record);

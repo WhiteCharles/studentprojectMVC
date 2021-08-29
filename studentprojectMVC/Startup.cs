@@ -39,16 +39,29 @@ namespace studentprojectMVC
         // For more information on how to configure your application, visit https: /go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddHttpsRedirection(options =>
+            //var connection = Configuration.GetConnectionString("studentprojectMVCDb");  DefaultConnection
+            services.AddDbContextPool<AppDbContext>(options =>
             {
-                options.RedirectStatusCode = StatusCodes.Status301MovedPermanently;
-                options.HttpsPort = 443;
-            });
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            });                
+
+            // register own services and repositories
+            services.AddScoped<IRecordRepository, RecordRepository>();
+            services.AddScoped<IGenreRepository, GenreRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<ShoppingCart>(sp => ShoppingCart.GetCart(sp));
+
             //// GDPR - Consent ===  Temporarily disable cookie
             services.Configure<CookiePolicyOptions>(options =>
             {
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
+            services.AddHttpsRedirection(options =>
+            {
+                options.RedirectStatusCode = StatusCodes.Status301MovedPermanently;
+                options.HttpsPort = 443;
             });
 
             services.Configure<IdentityOptions>(options =>
@@ -71,16 +84,16 @@ namespace studentprojectMVC
                 options.ExcludedHosts.Add("example.com");
                 options.ExcludedHosts.Add("www.example.com");
             });
+
             // AntiForgery Expanded            
             //services.AddAntiforgery();
             //services.AddAntiforgery(options => { options.RequireSsl = true; });
             // Anti Forgery as global filter
-            services.AddMvc(OptionsBuilderConfigurationExtensions =>
-                OptionsBuilderConfigurationExtensions.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
 
-            //var connection = Configuration.GetConnectionString("studentprojectMVCDb");  DefaultConnection
-            services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddMvc(OptionsBuilderConfigurationExtensions 
+                => OptionsBuilderConfigurationExtensions
+                .Filters
+                .Add(new AutoValidateAntiforgeryTokenAttribute()));
 
             //services.AddDefaultIdentity<IdentityUser>(Options => Options.SignIn.RequireConfirmedAccount = true)
             //    .AddPwnedPasswordsValidator<IdentityUser>()
@@ -121,12 +134,6 @@ namespace studentprojectMVC
             //        options.HttpsPort = 443;
             //    });
             //}
-
-            // register own services and repositories
-            services.AddScoped<IRecordRepository, RecordRepository>();
-            services.AddScoped<IGenreRepository, GenreRepository>();
-            services.AddScoped<IOrderRepository, OrderRepository>();
-            services.AddScoped<ShoppingCart>(sp => ShoppingCart.GetCart(sp));
 
             services.AddHttpContextAccessor();
             //services.AddSession();
