@@ -3,33 +3,34 @@
 @{
     var consentFeatureFlag = Context.Features.Get<ITrackingConsentFeature>();
     var showBannerFlag = !consentFeatureFlag?.CanTrack ?? false;
-    var cookieStr = consentFeatureFlag?.CreateConsentCookie();
+    var cookieString = consentFeatureFlag?.CreateConsentCookie();
 }
 
 @if (showBannerFlag)
 {
-    <div id="cookieConsentdiv" class="required classes">
+    <div id="cookieConsentdiv" class="alert alert-info alert-dismissible fade show" role="alert">
+        @*required classes*@
         &copy; 2021 - Charles D. White - Please read my project website privacy policy <a asp-controller="Home" asp-action="Privacy">Learn More</a>.  @*asp-page="/Home/Privacy"*@
-        <button type="button" class="accept-policy close" data-cookie-string="@cookieStr">
+        <button type="button" class="accept-policy close" data-dismiss="alert" aria-label="Close" data-cookie-string="@cookieString">
             <span aria-hidden="true">I Accept the Privacy Policy</span>
         </button>
     </div>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#cookieConsentdiv button[data-cookie-string]").bind("click", function () {
-                document.cookie = $("#cookieConsentdiv button").attr("data-cookie-string");
-                $("#cookieConsentdiv").hide();
+    @*<script type="text/javascript">
+            $(document).ready(function () {
+                $("#cookieConsentdiv button[data-cookie-string]").bind("click", function () {
+                    document.cookie = $("#cookieConsentdiv button").attr("data-cookie-string");
+                    $("#cookieConsentdiv").hide();
+                });
             });
-        });
-    </script>
-    @*<script>
+        </script>*@
+    <script>
         (function () {
             var button = document.querySelector("#cookieConsent button[data-cookie-string]");
             button.addEventListener("click", function (event) {
                 document.cookie = button.dataset.cookieString;
             }, false);
         })();
-    </script>*@
+    </script>
 
 
 }

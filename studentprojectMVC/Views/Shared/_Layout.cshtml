@@ -54,7 +54,9 @@
                     <li><a asp-controller="Home" asp-action="Index">Home</a></li>
                     <!--li><a asp-controller="Record" asp-action="List">Records</a></!--li-->
                     @await Component.InvokeAsync("GenreMenu")
+
                     <li><a asp-controller="Contact" asp-action="Index">Contact</a></li>
+
                     @await Component.InvokeAsync("ShoppingCartSummary")
                     @if (SignInManager.IsSignedIn(User) && User.IsInRole("Administrators"))
                     {
@@ -98,8 +100,8 @@
     <footer class="border-top footer text-muted">
         <div class="container consentclass">
             <partial name="_CookieConsentPartial" />
-            &copy; 2021 - Charles D. White - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-            <partial name="_CookieConsentRevokePartial" />
+            &copy; 2021 - Charles D. White - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a> <partial name="_CookieConsentRevokePartial" />
+            <div>&copy; 2018 - WebApp   <a asp-page="/Privacy">Privacy Policy</a> <partial name="_CookieConsentRevokePartial" /></div>
             @*asp-page="/Home/Privacy"*@
         </div>
     </footer>

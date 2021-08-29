@@ -23,7 +23,7 @@ namespace studentprojectMVC
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseKestrel(opt =>
+                    webBuilder.ConfigureKestrel(opt =>  // .UseKestrel
                     {
                         opt.AddServerHeader = false;
                         opt.ConfigureHttpsDefaults(s =>
@@ -31,51 +31,83 @@ namespace studentprojectMVC
                             s.SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls13; ;
                         });
                     });
+                    webBuilder.UseContentRoot(Directory.GetCurrentDirectory());
                     webBuilder.UseStartup<Startup>();
-                    //webBuilder
-                    //.ConfigureKestrel(o => o.AddServerHeader = false)
-                    //// hide Kestrel server header
-                    ////.UseKestrel()
-                    ////.UseContentRoot(Directory.GetCurrentDirectory())
-                    //.UseIISIntegration()
-                    //.UseStartup<Startup>();
-                    //webBuilder.UseKestrel(kestrelOptions =>
-                    //    {
-                    //////        opt.AddServerHeader = false;
-                    //        kestrelOptions.ConfigureHttpsDefaults(httpsOptions =>
-                    //        {
-                    //            httpsOptions.SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls13;
-                    //        });
-                    //    });
-
-                    //webBuilder.ConfigureHttpsDefaults(httpsOptions =>
-                    //    {
-                    //        httpsOptions.SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls13;
-                    //    });
-                    //});
-
-                    //webBuilder.UseConfiguration(httpsOption =>
-                    //{
-                    //    httpsOption.SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls13;
-                    //});
-                    ////webBuilder.UseKestrel(opt =>
-                    ////{
-                    ////    opt.AddServerHeader = false;
-                    ////    opt.ConfigureHttpsDefaults(s =>
-                    ////    {
-                    ////        s.SslProtocols = SslProtocols.Tls12;
-                    ////    });
-                    ////});
-
-                    //////////////////////////
-
-                    ////webBuilder.ConfigureKestrel(o => o.AddServerHeader = false)
-                    ////// hide Kestrel server header
-                    //////.UseKestrel()
-                    ////.UseContentRoot(Directory.GetCurrentDirectory())
-                    ////.UseIISIntegration()
-                    ////.UseStartup<Startup>();
-
                 });
     }
 }
+
+//public static IHostBuilder CreateHostBuilder(string[] args) =>
+//           Host.CreateDefaultBuilder(args)
+//               .ConfigureWebHostDefaults(webBuilder =>
+//               {
+//                   webBuilder.ConfigureKestrel(opt =>  // .UseKestrel
+//                    {
+//                        opt.AddServerHeader = false;
+//                        opt.ConfigureHttpsDefaults(s =>
+//                        {
+//                            s.SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls13; ;
+//                        });
+//                    });
+//                   webBuilder.UseContentRoot(Directory.GetCurrentDirectory());
+//                   webBuilder.UseStartup<Startup>();
+//               });
+           
+//    }
+//}
+
+
+
+
+//webBuilder.UseIISIntegration(opt =>  // .UseKestrel
+//{
+//    opt.AddServerHeader = false;
+//    opt.ConfigureHttpsDefaults(s =>
+//    {
+//        s.SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls13; ;
+//    });
+//});
+
+//webBuilder
+//.ConfigureKestrel(o => o.AddServerHeader = false)
+//// hide Kestrel server header
+////.UseKestrel()
+////.UseContentRoot(Directory.GetCurrentDirectory())
+//.UseIISIntegration()
+//.UseStartup<Startup>();
+//webBuilder.UseKestrel(kestrelOptions =>
+//    {
+//////        opt.AddServerHeader = false;
+//        kestrelOptions.ConfigureHttpsDefaults(httpsOptions =>
+//        {
+//            httpsOptions.SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls13;
+//        });
+//    });
+
+//webBuilder.ConfigureHttpsDefaults(httpsOptions =>
+//    {
+//        httpsOptions.SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls13;
+//    });
+//});
+
+//webBuilder.UseConfiguration(httpsOption =>
+//{
+//    httpsOption.SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls13;
+//});
+////webBuilder.UseKestrel(opt =>
+////{
+////    opt.AddServerHeader = false;
+////    opt.ConfigureHttpsDefaults(s =>
+////    {
+////        s.SslProtocols = SslProtocols.Tls12;
+////    });
+////});
+
+//////////////////////////
+
+////webBuilder.ConfigureKestrel(o => o.AddServerHeader = false)
+////// hide Kestrel server header
+//////.UseKestrel()
+////.UseContentRoot(Directory.GetCurrentDirectory())
+////.UseIISIntegration()
+////.UseStartup<Startup>();

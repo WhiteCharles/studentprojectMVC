@@ -1,20 +1,20 @@
 ﻿@model IEnumerable<Genre>
 
 <li class="dropdown">
-    <a asp-controller="Record"
-       asp-action="Index"
-       class="dropdown-toggle" data-toggle="dropdown">Records<b class="caret"></b></a>
+    <a asp-controller="Record" asp-action="Index"
+       class="dropdown-toggle" data-toggle="dropdown">Select Record Genre<b class="caret"></b></a>
+
     <ul class="dropdown-menu">
+
         @foreach(var genre in Model)
         {
             <li>
-                <a asp-controller="Record" asp-action="List"
-                   asp-route-category="@genre.GenreName">@genre.GenreName</a>
+                <a asp-controller="Record" asp-action="List" asp-route-genre="@genre.GenreName">@genre.GenreName</a>
             </li>
         }
         <li class="divider"></li>
         <li>
-            <a asp-controller="Record" asp-action="List" asp-route-Category="">View all records in Collection</a>
+            <a asp-controller="Record" asp-action="List" asp-route-genre="">View all records in Collection</a>
         </li>
     </ul>
 </li>
