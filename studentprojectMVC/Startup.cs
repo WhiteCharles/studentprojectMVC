@@ -30,20 +30,31 @@ namespace studentprojectMVC
     public class Startup
     {
         public IConfiguration Configuration { get; }
+        private readonly IWebHostEnvironment CurrentEnvironment;
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            CurrentEnvironment = env;
         }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https: /go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            //var connection = Configuration.GetConnectionString("studentprojectMVCDb");  DefaultConnection
+            string connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContextPool<AppDbContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-            });                
+                // WARNINIG: The MemoryDatabase is just used to test that the projects runs without the need of a database.
+                if (string.IsNullOrEmpty(connectionString) && CurrentEnvironment.IsDevelopment())
+                {
+                    options.UseInMemoryDatabase("dummyDatabase");
+                }
+                else
+                {
+                    options.UseSqlServer(connectionString);
+                }
+            });
 
             // register own services and repositories
             services.AddScoped<IRecordRepository, RecordRepository>();
@@ -259,9 +270,9 @@ namespace studentprojectMVC
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
-            if (env.IsDevelopment())
+            if (CurrentEnvironment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
