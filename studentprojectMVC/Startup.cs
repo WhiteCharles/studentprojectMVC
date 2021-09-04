@@ -46,7 +46,7 @@ namespace studentprojectMVC
             services.AddDbContextPool<AppDbContext>(options =>
             {
                 // WARNINIG: The MemoryDatabase is just used to test that the projects runs without the need of a database.
-                if (string.IsNullOrEmpty(connectionString) && CurrentEnvironment.IsDevelopment())
+                if (string.IsNullOrEmpty(connectionString))
                 {
                     options.UseInMemoryDatabase("dummyDatabase");
                 }
@@ -69,11 +69,12 @@ namespace studentprojectMVC
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddHttpsRedirection(options =>
-            {
-                options.RedirectStatusCode = StatusCodes.Status301MovedPermanently;
-                options.HttpsPort = 443;
-            });
+            // REMOVE TEMPORARILY THE SSL REDIRECTION
+            //services.AddHttpsRedirection(options =>
+            //{
+            //    options.RedirectStatusCode = StatusCodes.Status301MovedPermanently;
+            //    options.HttpsPort = 443;
+            //});
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -241,9 +242,12 @@ namespace studentprojectMVC
                 Options.Filters.Add(new RequireHttpsAttribute())
                 );*/
             // combine with --> services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-            services.AddControllersWithViews(Options =>
-                Options.Filters.Add(new RequireHttpsAttribute())
-                ).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+
+
+            // REMOVE TEMPORARILY THE SSL REDIRECTION
+            //services.AddControllersWithViews(Options =>
+            //    Options.Filters.Add(new RequireHttpsAttribute())
+            //    ).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             //services.AddRazorPages();
             services.AddRazorPages().AddMvcOptions(Options => Options.Filters.Add(new AuthorizeFilter())); // [AllowAnonymous]
@@ -285,7 +289,9 @@ namespace studentprojectMVC
                 app.UseHsts();
             }
             //app.UseHsts();
-            app.UseHttpsRedirection();
+
+            // REMOVE TEMPORARILY THE SSL REDIRECTION
+            //app.UseHttpsRedirection();
             app.UseStaticFiles(); // use www/root
 
             app.UseCookiePolicy(); // ===  Temporarily disable cookie
