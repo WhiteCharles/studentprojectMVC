@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using studentprojectMVC.DbContexts;
 using studentprojectMVC.Models;
 using System;
@@ -11,17 +12,27 @@ namespace studentprojectMVC.Services
     public class RecordRepository : IRecordRepository
     {
         private readonly AppDbContext _appDbContext;
+        private readonly ILogger<RecordRepository> _logger;
 
-        public RecordRepository(AppDbContext appDbContext)
+        public RecordRepository(AppDbContext appDbContext, ILogger<RecordRepository> logger)
         {
             _appDbContext = appDbContext;
+            _logger = logger;
         }
 
         public IEnumerable<Record> AllRecords
         {
             get
             {
-                return _appDbContext.Records.Include(c => c.Genre);
+                try
+                {
+                    return _appDbContext.Records.Include(c => c.Genre);
+                }
+                catch(Exception ex)
+                {
+                    _logger.LogError(ex,$"The function '{nameof(AllRecords)}' throws an exception.");
+                    return Enumerable.Empty<Record>();
+                }
             }
         }
 
@@ -29,7 +40,15 @@ namespace studentprojectMVC.Services
         {
             get
             {
-                return _appDbContext.Records.Include(c => c.Genre).Where(r => r.RecordOfTheWeek);
+                try
+                {
+                    return _appDbContext.Records.Include(c => c.Genre).Where(r => r.RecordOfTheWeek);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"The function '{nameof(RecordsOfTheWeek)}' throws an exception.");
+                    return Enumerable.Empty<Record>();
+                }
             }
         }
 
@@ -65,8 +84,16 @@ namespace studentprojectMVC.Services
 
         public Record GetRecordById(Guid recordId)   //
         {
-            //return _appDbContext.Records.Include(r => r.RecordReviews).FirstOrDefault(r => r.RecordId == recordId);
-            return _appDbContext.Records.FirstOrDefault(r => r.RecordId == recordId);
+            try
+            {
+                //return _appDbContext.Records.Include(r => r.RecordReviews).FirstOrDefault(r => r.RecordId == recordId);
+                return _appDbContext.Records.FirstOrDefault(r => r.RecordId == recordId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"The function '{nameof(GetRecordById)}' throws an exception with param: {recordId}.", recordId);
+                return null;
+            }
         }
 
         public void UpdateRecord(Record record)

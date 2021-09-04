@@ -30,20 +30,31 @@ namespace studentprojectMVC
     public class Startup
     {
         public IConfiguration Configuration { get; }
+        private readonly IWebHostEnvironment CurrentEnvironment;
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            CurrentEnvironment = env;
         }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https: /go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            //var connection = Configuration.GetConnectionString("studentprojectMVCDb");  DefaultConnection
+            string connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContextPool<AppDbContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-            });                
+                // WARNINIG: The MemoryDatabase is just used to test that the projects runs without the need of a database.
+                if (string.IsNullOrEmpty(connectionString))
+                {
+                    options.UseInMemoryDatabase("dummyDatabase");
+                }
+                else
+                {
+                    options.UseSqlServer(connectionString);
+                }
+            });
 
             // register own services and repositories
             services.AddScoped<IRecordRepository, RecordRepository>();
@@ -58,11 +69,12 @@ namespace studentprojectMVC
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddHttpsRedirection(options =>
-            {
-                options.RedirectStatusCode = StatusCodes.Status301MovedPermanently;
-                options.HttpsPort = 443;
-            });
+            // REMOVE TEMPORARILY THE SSL REDIRECTION
+            //services.AddHttpsRedirection(options =>
+            //{
+            //    options.RedirectStatusCode = StatusCodes.Status301MovedPermanently;
+            //    options.HttpsPort = 443;
+            //});
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -230,9 +242,12 @@ namespace studentprojectMVC
                 Options.Filters.Add(new RequireHttpsAttribute())
                 );*/
             // combine with --> services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-            services.AddControllersWithViews(Options =>
-                Options.Filters.Add(new RequireHttpsAttribute())
-                ).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+
+
+            // REMOVE TEMPORARILY THE SSL REDIRECTION
+            //services.AddControllersWithViews(Options =>
+            //    Options.Filters.Add(new RequireHttpsAttribute())
+            //    ).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             //services.AddRazorPages();
             services.AddRazorPages().AddMvcOptions(Options => Options.Filters.Add(new AuthorizeFilter())); // [AllowAnonymous]
@@ -259,22 +274,25 @@ namespace studentprojectMVC
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
-            if (env.IsDevelopment())
+            if (CurrentEnvironment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
             else
             {
-                app.UseStatusCodePagesWithRedirects("Error/{0}");
-                
+                // REMOVED TEMPORARILY, MULTIPLE REDIRECTS ARE PERFORMED!
+                //app.UseStatusCodePagesWithRedirects("/Error/{0}");
+
                 //app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
             //app.UseHsts();
-            app.UseHttpsRedirection();
+
+            // REMOVE TEMPORARILY THE SSL REDIRECTION
+            //app.UseHttpsRedirection();
             app.UseStaticFiles(); // use www/root
 
             app.UseCookiePolicy(); // ===  Temporarily disable cookie
